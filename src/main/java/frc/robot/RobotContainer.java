@@ -10,7 +10,7 @@ import frc.robot.commands.ExampleCommand;
 
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LEDShift;
-import frc.robot.subsystems.Motor;
+import frc.robot.subsystems.CanSparkFlex;
 import frc.robot.subsystems.Servos;
 
 import java.util.function.BooleanSupplier;
@@ -42,26 +42,27 @@ public class RobotContainer {
   private final DoubleSupplier rightXAxis = () -> controller.getRawAxis(4); 
   private final DoubleSupplier rightYAxis = () -> controller.getRawAxis(5);
 
-  private final Motor m_motorSubsystem = new Motor();
+  private final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
   private final LED m_LED = new LED();
-  //private final LEDShift m_LEDShift = new LEDShift();
   private final Servos m_Servo = new Servos();
+
+  //private final LEDShift m_LEDShift = new LEDShift();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    configureBindings();
+    configureBindings(); 
   }
 
   private void configureBindings() {
 
-    m_motorSubsystem.setDefaultCommand(m_motorSubsystem.motorOn(leftXAxis));
+    //need comments
 
-    // m_LED.setDefaultCommand(m_LED.controllerDirectionRGBCommand(leftXAxis));
-    // m_Servo.setDefaultCommand(m_Servo.servoStick(leftXAxis));
-
-    //m_LEDShift.setDefaultCommand(m_LEDShift.LEDShiftCommand(leftXAxis));
+    //m_canSparkFlex.setDefaultCommand(m_canSparkFlex.moveMotor(leftXAxis));
+    //m_LED.setDefaultCommand(m_LED.controllerDirectionRGBCommand(leftXAxis).ignoringDisable(true));
+    m_LED.setDefaultCommand(m_LED.LEDShiftCommand(rightXAxis).ignoringDisable(true));
+    //m_Servo.setDefaultCommand(m_Servo.servoStick(rightXAxis));
 
   }
 }

@@ -15,6 +15,7 @@ import frc.robot.subsystems.Servos;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,14 +34,20 @@ public class RobotContainer {
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  
+  private final Trigger xButton = controller.x();
+  private final Trigger aButton = controller.a();
+  private final Trigger bButton = controller.b();
+  private final Trigger yButton = controller.y();
+
+  private final Trigger rBumper = controller.rightBumper();
+  private final Trigger lBumper = controller.leftBumper();
+
   private final DoubleSupplier leftXAxis = () -> controller.getRawAxis(0);
   private final DoubleSupplier leftYAxis = () -> controller.getRawAxis(1);
   private final DoubleSupplier leftTrigger = () -> controller.getRawAxis(2);
   private final DoubleSupplier rightTrigger = () -> controller.getRawAxis(3);
   private final DoubleSupplier rightXAxis = () -> controller.getRawAxis(4); 
   private final DoubleSupplier rightYAxis = () -> controller.getRawAxis(5);
-
   private final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
   private final LED m_LED = new LED();
   private final Servos m_Servo = new Servos();
@@ -59,8 +66,9 @@ public class RobotContainer {
     //need comments
 
     //m_canSparkFlex.setDefaultCommand(m_canSparkFlex.moveMotor(leftXAxis));
+    xButton.whileTrue(m_canSparkFlex.closedLoopControl());
     //m_LED.setDefaultCommand(m_LED.controllerDirectionRGBCommand(leftXAxis).ignoringDisable(true));
-    m_LED.setDefaultCommand(m_LED.LEDShiftCommand(rightXAxis).ignoringDisable(true));
+    //m_LED.setDefaultCommand(m_LED.LEDShiftCommand(rightXAxis).ignoringDisable(true));
     //m_Servo.setDefaultCommand(m_Servo.servoStick(rightXAxis));
 
   }

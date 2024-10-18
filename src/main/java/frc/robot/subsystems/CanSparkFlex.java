@@ -23,6 +23,7 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -38,68 +39,36 @@ public class CanSparkFlex extends SubsystemBase {
   // use parameter in commands
   public CANSparkFlex motor1;
   public RelativeEncoder myEncoder;
-  public SparkPIDController myPIDController;
+  public SparkPIDController pid;
   // public final LEDSubsystem motorLED = new LEDSubsystem();
 
-  public DigitalInput mechanicalSwitch;
-  public DigitalInput magnetSwitch;
-
   double kP = 0.0003;
-  double kI = 0.000001;
-  double kD = 0.00001;
-  double kIz = 0;
+  double kI = 0;
+  double kD = 0;
+  double kFF = 0.0001;
 
   double kMinOutput = -1;
   double kMaxOutput = 1;
 
-  double kFF = 0.0001;
-
-  double setPointRPM = 1427;
+  double setPoint = 800;
 
   public CanSparkFlex() {
+
     motor1 = new CANSparkFlex(51, CANSparkLowLevel.MotorType.kBrushless);
     myEncoder = motor1.getEncoder(); // getEncoder returns a relative encoder
 
     motor1.restoreFactoryDefaults();
     myEncoder.setPosition(0);
 
-    myPIDController = motor1.getPIDController();
+    pid = motor1.getPIDController();
 
-    // motorLED = new LEDSubsystem();
-
-    mechanicalSwitch = new DigitalInput(9);
-    magnetSwitch = new DigitalInput(8);
-
-    Preferences.initDouble(Constants.PIDConstants.pKey, kP);
-    Preferences.initDouble(Constants.PIDConstants.iKey, kI);
-    Preferences.initDouble(Constants.PIDConstants.dKey, kD);
-    Preferences.initDouble(Constants.PIDConstants.ffKey, kFF);
-    Preferences.initDouble(Constants.PIDConstants.spKey, setPointRPM);
-
-    // myPIDController = new PIDController(Constants.PIDConstants.kP,
-    // Constants.PIDConstants.kI, Constants.PIDConstants.kD);
-
-    // myPIDController.setReference(Constants.PIDConstants.setPoint,
-    // CANSparkBase.ControlType.kVelocity);
-
-    myPIDController.setP(kP);
-    myPIDController.setI(kI);
-    myPIDController.setD(kD);
-    myPIDController.setIZone(kIz);
+    pid.setP(kP);
+    pid.setI(kI);
+    pid.setD(kD);
+    pid.setFF(kFF);
 
     // Set the minimum and maximum outputs of the motor [-1, 1]
-    myPIDController.setOutputRange(kMinOutput, kMaxOutput);
-
-    // Set kFF
-    myPIDController.setFF(kFF);
-  }
-
-  public boolean smallDeadBand(double axis) {
-    return (axis < 0 && axis > -0.1);
-  }
-
-  public boolean largeDeadBand(double axis) {
-    return (axis > 0 && axis < 0.1);
+    pid.setOutputRange(kMinOutput, kMaxOutput);
   }
 
   public Command moveMotor(DoubleSupplier axis) {
@@ -130,6 +99,24 @@ public class CanSparkFlex extends SubsystemBase {
 
         () -> false,
 
+        this);
+  }
+
+  public Command closedLoopControl() {
+    return new FunctionalCommand(
+        () -> {}, 
+        
+        () -> {
+          pid.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+          SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+        }, 
+        
+        interrupted -> {
+          pid.setReference(0, CANSparkMax.ControlType.kVelocity);
+        }, 
+        
+        () -> false, 
+        
         this);
   }
 

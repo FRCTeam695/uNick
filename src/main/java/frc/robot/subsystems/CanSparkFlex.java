@@ -43,14 +43,16 @@ public class CanSparkFlex extends SubsystemBase {
   // public final LEDSubsystem motorLED = new LEDSubsystem();
 
   double kP = 0.0003;
-  double kI = 0;
-  double kD = 0;
-  double kFF = 0.0001;
+  double kI = 0.000001;
+  double kD = 0.0089;
+  //double kIz = 0.0;
+  double kFF = 0.0;
+  //0.0001
 
   double kMinOutput = -1;
   double kMaxOutput = 1;
 
-  double setPoint = 800;
+  double setPoint = 1000;
 
   public CanSparkFlex() {
 
@@ -65,10 +67,19 @@ public class CanSparkFlex extends SubsystemBase {
     pid.setP(kP);
     pid.setI(kI);
     pid.setD(kD);
+    //pid.setIZone(kIz);
     pid.setFF(kFF);
 
     // Set the minimum and maximum outputs of the motor [-1, 1]
     pid.setOutputRange(kMinOutput, kMaxOutput);
+
+    SmartDashboard.putNumber("kP", kP);
+    SmartDashboard.putNumber("kI", kI);
+    SmartDashboard.putNumber("kD", kD);
+    SmartDashboard.putNumber("kFF", kFF);
+
+    // SmartDashboard.putNumber("kIz", kIz);
+    // SmartDashboard.putNumber("kFF", kFF);
   }
 
   public Command moveMotor(DoubleSupplier axis) {
@@ -104,7 +115,17 @@ public class CanSparkFlex extends SubsystemBase {
 
   public Command closedLoopControl() {
     return new FunctionalCommand(
-        () -> {}, 
+        () -> {
+          kP = SmartDashboard.getNumber("kP", kP);
+          kI = SmartDashboard.getNumber("kI", kI);
+          kD = SmartDashboard.getNumber("kD", kD);
+          kFF = SmartDashboard.getNumber("kFF", kFF);
+
+          pid.setP(kP);
+          pid.setI(kI);
+          pid.setD(kD);
+          pid.setD(kFF);
+        }, 
         
         () -> {
           pid.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
@@ -113,11 +134,17 @@ public class CanSparkFlex extends SubsystemBase {
         
         interrupted -> {
           pid.setReference(0, CANSparkMax.ControlType.kVelocity);
+          SmartDashboard.putNumber("Motor Speed", 0);
         }, 
         
         () -> false, 
         
         this);
+  }
+
+  @Override
+  public void periodic() {
+    
   }
 
 }

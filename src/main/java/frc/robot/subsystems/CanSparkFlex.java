@@ -42,12 +42,12 @@ public class CanSparkFlex extends SubsystemBase {
   public SparkPIDController pid;
   // public final LEDSubsystem motorLED = new LEDSubsystem();
 
-  double kP = 0.0003;
+  double kP = 0.00005;
   double kI = 0.000001;
-  double kD = 0.0089;
-  //double kIz = 0.0;
-  double kFF = 0.0;
-  //0.0001
+  double kD = 0.002;
+  double kFF = 0.0001;
+
+  int dir = 0;
 
   double kMinOutput = -1;
   double kMaxOutput = 1;
@@ -77,6 +77,7 @@ public class CanSparkFlex extends SubsystemBase {
     SmartDashboard.putNumber("kI", kI);
     SmartDashboard.putNumber("kD", kD);
     SmartDashboard.putNumber("kFF", kFF);
+    SmartDashboard.putNumber("direction", dir);
 
     // SmartDashboard.putNumber("kIz", kIz);
     // SmartDashboard.putNumber("kFF", kFF);
@@ -116,10 +117,12 @@ public class CanSparkFlex extends SubsystemBase {
   public Command closedLoopControl() {
     return new FunctionalCommand(
         () -> {
+
           kP = SmartDashboard.getNumber("kP", kP);
           kI = SmartDashboard.getNumber("kI", kI);
           kD = SmartDashboard.getNumber("kD", kD);
           kFF = SmartDashboard.getNumber("kFF", kFF);
+          dir = (int) SmartDashboard.getNumber("direction", dir);
 
           pid.setP(kP);
           pid.setI(kI);
@@ -128,8 +131,13 @@ public class CanSparkFlex extends SubsystemBase {
         }, 
         
         () -> {
-          pid.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
-          SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+          if (dir == 0) {
+            pid.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+          } else {
+            pid.setReference(setPoint * -1, CANSparkMax.ControlType.kVelocity);
+            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+          }
         }, 
         
         interrupted -> {

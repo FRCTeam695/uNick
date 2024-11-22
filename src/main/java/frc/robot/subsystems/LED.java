@@ -11,7 +11,7 @@ import java.util.function.DoubleSupplier;
 
 public class LED extends SubsystemBase {
 
-    int[] LEDShift = {1, 1, 1, 0, 0 };
+    int[] LEDShift = { 0, 1, 1, 1, 0 };
     long counter = 0;
 
     AddressableLED realLED;
@@ -29,77 +29,184 @@ public class LED extends SubsystemBase {
 
     }
 
-    public void setRed(long redBrightness) {
-        for (var i = 0; i < realLEDBuffer.getLength(); i++) {
+    public void setRed(double redBrightness) {
+
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
 
-            realLEDBuffer.setHSV(i, 0, 255, (int) ((redBrightness) - 5) * 2);
+            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(redBrightness))), 0, 0);
 
-            realLED.setData(realLEDBuffer);
         }
+
+        realLED.setData(realLEDBuffer);
     }
 
-    public void setGreen(long greenBrightness) {
-        for (var i = 0; i < realLEDBuffer.getLength(); i++) {
+    public void setOrange(double orangeBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for green
 
-            realLEDBuffer.setHSV(i, 60, 255, (int) ((greenBrightness) - 5) * 2);
+            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(orangeBrightness))),
+                    (int) ((100) * (double) (Math.abs(orangeBrightness))), 0);
 
-            realLED.setData(realLEDBuffer);
         }
+
+        realLED.setData(realLEDBuffer);
     }
+
+    public void setYellow(double yellowBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(yellowBrightness))),
+                    (int) ((255) * (double) (Math.abs(yellowBrightness))), 0);
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    public void setGreen(double greenBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, 0, (int) ((255) * (double) (Math.abs(greenBrightness))), 0);
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    public void setBlue(double blueBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, 0, 0, (int) ((255) * (double) (Math.abs(blueBrightness))));
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    public void setPurple(double purpleBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, (int) ((160) * (double) (Math.abs(purpleBrightness))),
+                    (int) ((32) * (double) (Math.abs(purpleBrightness))),
+                    (int) ((240) * (double) (Math.abs(purpleBrightness))));
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    public void setWhite(double whiteBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(whiteBrightness))),
+                    (int) ((255) * (double) (Math.abs(whiteBrightness))),
+                    (int) ((255) * (double) (Math.abs(whiteBrightness))));
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    public void setLEDOff() {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+
+            realLEDBuffer.setRGB(i, 0, 0, 0);
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
+    // -----------------------------------------------------------------------------------------------
 
     public double controllerXDirection(double xaxis) {
         return (1 - ((xaxis + 1) / 2));
     }
 
-    public boolean controllerXDirectionBoolRed(double xaxis) {
+    public boolean controllerXDirectionBoolLeft(double xaxis) {
         return controllerXDirection(xaxis) > 0.5;
     }
 
-    public boolean controllerXDirectionBoolGreen(double xaxis) {
+    public boolean controllerXDirectionBoolRight(double xaxis) {
         return controllerXDirection(xaxis) < 0.5;
     }
 
-    public void setLEDOff() {
-        for (var i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
+    public void controllerDirectionRGB(double xaxis, int leftColor, int rightColor) {
 
-            realLEDBuffer.setHSV(i, 0, 255, 0);
+        double leftBrightness = xaxis;
+        double rightBrightness = xaxis;
 
-            realLED.setData(realLEDBuffer);
-
-        }
-    }
-
-    public void controllerDirectionRGB(double xaxis) {
-
-        long redBrightness = Math.round(((128 * controllerXDirection(xaxis))));
-        long greenBrightness = Math.round(128 * (0.6 - controllerXDirection(xaxis)));
-
-        // System.out.println(redBrightness);
-        // System.out.println(greenBrightness);
         if (Math.round(xaxis * 10) != 0) {
 
-            // System.out.println((1 - ((controller.getLeftX() + 1) / 2)) * 10);
+            if (controllerXDirectionBoolRight(xaxis)) {
 
-            if (controllerXDirectionBoolGreen(xaxis)) {
-                // System.out.println(System.out.format("Green Brightness: %d",
-                // greenBrightness));
-                setGreen(greenBrightness);
+                if (rightColor == 0) {
+                    setRed(rightBrightness);
+                }
+
+                if (rightColor == 1) {
+                    setOrange(rightBrightness);
+                }
+
+                if (rightColor == 2) {
+                    setYellow(rightBrightness);
+                }
+
+                if (rightColor == 3) {
+                    setGreen(rightBrightness);
+                }
+
+                if (rightColor == 4) {
+                    setBlue(rightBrightness);
+                }
+
+                if (rightColor == 5) {
+                    setPurple(rightBrightness);
+                }
+
+                if (rightColor == 6) {
+                    setWhite(rightBrightness);
+                }
 
             }
 
-            if (controllerXDirectionBoolRed(xaxis)) {
-                // System.out.println(System.out.format("Red Brightness: %d", redBrightness));
-                setRed(redBrightness);
+            if (controllerXDirectionBoolLeft(xaxis)) {
+
+                if (leftColor == 0) {
+                    setRed(leftBrightness);
+                }
+
+                if (leftColor == 1) {
+                    setOrange(leftBrightness);
+                }
+
+                if (leftColor == 2) {
+                    setYellow(leftBrightness);
+                }
+
+                if (leftColor == 3) {
+                    setGreen(leftBrightness);
+                }
+
+                if (leftColor == 4) {
+                    setBlue(leftBrightness);
+                }
+
+                if (leftColor == 5) {
+                    setPurple(leftBrightness);
+                }
+
+                if (leftColor == 6) {
+                    setWhite(leftBrightness);
+                }
 
             }
-
-            // moving leds that move in the direction of the stick, while moving the servo,
-            // while moving the servo and controlling brightness at variable speed
-
-            // clean up code
 
         } else {
 
@@ -108,7 +215,7 @@ public class LED extends SubsystemBase {
         }
     }
 
-    public Command controllerDirectionRGBCommand(DoubleSupplier xaxis) {
+    public Command controllerDirectionRGBCommand(DoubleSupplier xaxis, int leftColor, int rightColor) {
         return new FunctionalCommand(
 
                 () -> {
@@ -117,7 +224,7 @@ public class LED extends SubsystemBase {
 
                 () -> {
 
-                    controllerDirectionRGB(xaxis.getAsDouble());
+                    controllerDirectionRGB(xaxis.getAsDouble(), leftColor, rightColor);
 
                 },
 
@@ -129,30 +236,26 @@ public class LED extends SubsystemBase {
                 this);
     }
 
-    public void servoRGB(double axis) {
+    // __________________________________________________________________________________________
 
-        long redBrightness = Math.round(((128 * controllerXDirection(axis))));
-        long greenBrightness = Math.round(128 * (0.6 - controllerXDirection(axis)));
+    public void servoRGB(double axis, int leftColor, int rightColor) {
 
-        if (Math.round(axis * 10) != 0) { //might just be able to remove this but idk
+        double leftBrightness = axis;
+        double rightBrightness = axis;
 
-            if (controllerXDirectionBoolGreen(axis)) {
-                // System.out.println(System.out.format("Green Brightness: %d",
-                // greenBrightness));
-                LEDShiftIterateRight(greenBrightness);
+        if (Math.round(axis * 10) != 0) {
 
-            }
+            if (controllerXDirectionBoolRight(axis)) {
 
-            if (controllerXDirectionBoolRed(axis)) {
-                // System.out.println(System.out.format("Red Brightness: %d", redBrightness));
-                LEDShiftIterateLeft(redBrightness);
+                LEDShiftIterateRight(leftBrightness, rightColor);
 
             }
 
-            // moving leds that move in the direction of the stick, while moving the servo,
-            // while moving the servo and controlling brightness at variable speed
+            if (controllerXDirectionBoolLeft(axis)) {
 
-            // clean up code
+                LEDShiftIterateLeft(rightBrightness, leftColor);
+
+            }
 
         } else {
 
@@ -168,12 +271,11 @@ public class LED extends SubsystemBase {
 
         int first = array[0];
 
-        for (int i = 1; i < array.length; i++) {
+        for (int i = 1; i < 5; i++) {
             newNumbers[i - 1] = array[i];
         }
-        // {1, 1, 1, 0, 0}
-        // {0, 1, 1, 1, 0}
-        newNumbers[array.length - 1] = first;
+
+        newNumbers[4] = first;
 
         return newNumbers;
     }
@@ -181,77 +283,141 @@ public class LED extends SubsystemBase {
     public int[] LEDShiftLeft(int[] array) {
         int[] newNumbers = { 0, 0, 0, 0, 0 };
 
-        int last = array[array.length - 1];
+        int last = array[4];
 
-        for (int i = 0; i < array.length - 1; i++) {
+        for (int i = 0; i < 4; i++) {
             newNumbers[i + 1] = array[i];
         }
 
-        // {0, 1, 1, 1, 0}
-        // {0, 0, 1, 1, 1}
-        // {1, 0, 0, 1, 1}
         newNumbers[0] = last;
 
         return newNumbers;
     }
 
-    // MAIN ENTRY
-    public void LEDShiftIterateRight(long brightness) {
+    public void LEDShiftIterateRight(double brightness, int rightColor) {
 
         if ((counter % 10) == 0) {
             LEDShift = LEDShiftRight(LEDShift);
 
-            for (int i = 0; i < LEDShift.length; i++) {
+            for (int i = 0; i < 5; i++) {
                 if (LEDShift[i] == 1) {
-                    realLEDBuffer.setHSV(i, 60, 255, (int) ((brightness) - 5) * 2);
+                    if (rightColor == 0) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))), 0, 0);
+                    }
+
+                    if (rightColor == 1) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((100) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (rightColor == 2) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (rightColor == 3) {
+                        realLEDBuffer.setRGB(i, 0, (int) ((255) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (rightColor == 4) {
+                        realLEDBuffer.setRGB(i, 0, 0, (int) ((255) * (double) (Math.abs(brightness))));
+                    }
+
+                    if (rightColor == 5) {
+                        realLEDBuffer.setRGB(i, (int) ((160) * (double) (Math.abs(brightness))),
+                                (int) ((32) * (double) (Math.abs(brightness))),
+                                (int) ((240) * (double) (Math.abs(brightness))));
+                    }
+
+                    if (rightColor == 6) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))));
+                    }
+
                 } else {
-                    realLEDBuffer.setHSV(i, 0, 255, 0);
+                    realLEDBuffer.setRGB(i, 0, 0, 0);
                 }
 
-                // System.out.println(counter);
                 if (counter > 1000) {
                     counter = 0;
                 }
+
             }
+
+            realLED.setData(realLEDBuffer);
         }
 
         counter += 1;
 
-        realLED.setData(realLEDBuffer);
     }
 
-    public void LEDShiftIterateLeft(long brightness) {
+    public void LEDShiftIterateLeft(double brightness, int leftColor) {
 
         if ((counter % 10) == 0) {
             LEDShift = LEDShiftLeft(LEDShift);
 
-            for (int i = 0; i < LEDShift.length; i++) {
+            for (int i = 0; i < 5; i++) {
                 if (LEDShift[i] == 1) {
-                    realLEDBuffer.setHSV(i, 0, 255, (int) ((brightness) - 5) * 2);
+                    if (leftColor == 0) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))), 0, 0);
+                    }
+
+                    if (leftColor == 1) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((100) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (leftColor == 2) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (leftColor == 3) {
+                        realLEDBuffer.setRGB(i, 0, (int) ((255) * (double) (Math.abs(brightness))), 0);
+                    }
+
+                    if (leftColor == 4) {
+                        realLEDBuffer.setRGB(i, 0, 0, (int) ((255) * (double) (Math.abs(brightness))));
+                    }
+
+                    if (leftColor == 5) {
+                        realLEDBuffer.setRGB(i, (int) ((160) * (double) (Math.abs(brightness))),
+                                (int) ((32) * (double) (Math.abs(brightness))),
+                                (int) ((240) * (double) (Math.abs(brightness))));
+                    }
+
+                    if (leftColor == 6) {
+                        realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))),
+                                (int) ((255) * (double) (Math.abs(brightness))));
+                    }
+
                 } else {
-                    realLEDBuffer.setHSV(i, 0, 255, 0);
+                    realLEDBuffer.setRGB(i, 0, 0, 0);
                 }
 
-                // System.out.println(counter);
                 if (counter > 1000) {
                     counter = 0;
                 }
+
             }
+
+            realLED.setData(realLEDBuffer);
         }
 
         counter += 1;
 
-        realLED.setData(realLEDBuffer);
     }
 
-    public Command LEDShiftCommand(DoubleSupplier axis) {
+    public Command LEDShiftCommand(DoubleSupplier axis, int leftColor, int rightColor) {
         return new FunctionalCommand(
 
                 () -> {
                 },
 
                 () -> {
-                    servoRGB(axis.getAsDouble());
+                    servoRGB(axis.getAsDouble(), leftColor, rightColor);
                 },
 
                 interrupted -> {
@@ -260,5 +426,61 @@ public class LED extends SubsystemBase {
                 () -> false,
 
                 this);
+    }
+
+    // ------------------------------------------------------------------------------------
+
+    public Command setColor(int colorNumber) {
+        return new FunctionalCommand(
+
+                () -> {
+
+                },
+
+                () -> {
+
+                    if (colorNumber == 0) {
+                        setRed(1);
+                    }
+
+                    if (colorNumber == 1) {
+                        setOrange(1);
+                    }
+
+                    if (colorNumber == 2) {
+                        setYellow(1);
+                    }
+
+                    if (colorNumber == 3) {
+                        setGreen(1);
+                    }
+
+                    if (colorNumber == 4) {
+                        setBlue(1);
+                    }
+
+                    if (colorNumber == 5) {
+                        setPurple(1);
+                    }
+
+                    if (colorNumber == 6) {
+                        setWhite(1);
+                    }
+
+                },
+
+                interrupted -> {
+                    setLEDOff();
+                },
+
+                () -> false,
+
+                this);
+    }
+
+    // _________________________________________________
+
+    public void rainbow() {
+
     }
 }

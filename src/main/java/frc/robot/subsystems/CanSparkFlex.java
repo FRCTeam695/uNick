@@ -67,7 +67,6 @@ public class CanSparkFlex extends SubsystemBase {
     pid.setP(kP);
     pid.setI(kI);
     pid.setD(kD);
-    //pid.setIZone(kIz);
     pid.setFF(kFF);
 
     // Set the minimum and maximum outputs of the motor [-1, 1]
@@ -105,8 +104,6 @@ public class CanSparkFlex extends SubsystemBase {
 
         interrupted -> {
           motor1.set(0);
-
-          System.out.println(axis.getAsDouble());
         },
 
         () -> false,

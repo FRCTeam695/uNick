@@ -72,4 +72,10 @@ public class DriveTrain extends SubsystemBase {
 
                 this);
     }
+
+    public Command arcadeDriveCommand() {
+        return new FunctionalCommand(() -> {}, () -> {}, interrupted -> {}, () -> false, this);
+    }
+
+    
 }

@@ -10,6 +10,7 @@ import frc.robot.subsystems.CanSparkFlex;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LimitSwitches;
+import frc.robot.subsystems.NetworkTables;
 import frc.robot.subsystems.Servos;
 
 import java.util.function.BooleanSupplier;
@@ -106,6 +107,7 @@ public class RobotContainer {
   private final Servos m_Servo = new Servos();
   private final DriveTrain driveTrain = new DriveTrain();
   private final LimitSwitches limitSwitch = new LimitSwitches();
+  private final NetworkTables networkTable = new NetworkTables();
 
   //_________________________________________________________________________________________
 
@@ -142,7 +144,7 @@ public class RobotContainer {
 
     //driveTrain.setDefaultCommand(driveTrain.tankDriveCommand(leftYAxis, rightYAxis));
 
-    limitSwitch.setDefaultCommand(limitSwitch.limitSwitch(leftXAxis));
+    //limitSwitch.setDefaultCommand(limitSwitch.limitSwitch(leftXAxis));
 
   }
 }

@@ -45,7 +45,7 @@ public class DriveTrain extends SubsystemBase {
         rightBack.follow(rightFront);
 
         //leftFront.setInverted(true);
-        // rightFront.setInverted(true);
+        rightFront.setInverted(true);
     }
 
     // public void tankDrive(double leftSpeed, double rightSpeed) {

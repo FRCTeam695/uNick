@@ -52,7 +52,8 @@ public class CanSparkFlex extends SubsystemBase {
   double kMinOutput = -1;
   double kMaxOutput = 1;
 
-  double setPoint = 1000;
+  double speedSetPoint = 1000;
+  double positionSetPoint = 1000;
 
   public CanSparkFlex() {
 
@@ -111,10 +112,45 @@ public class CanSparkFlex extends SubsystemBase {
         this);
   }
 
-  public Command closedLoopControl() {
+  public Command closedLoopControlVelocity() {
     return new FunctionalCommand(
         () -> {
 
+          // kP = SmartDashboard.getNumber("kP", kP);
+          // kI = SmartDashboard.getNumber("kI", kI);
+          // kD = SmartDashboard.getNumber("kD", kD);
+          // kFF = SmartDashboard.getNumber("kFF", kFF);
+          dir = (int) SmartDashboard.getNumber("direction", dir);
+
+          // pid.setP(kP);
+          // pid.setI(kI);
+          // pid.setD(kD);
+          // pid.setD(kFF);
+        },
+
+        () -> {
+          if (dir == 0) {
+            pid.setReference(speedSetPoint, CANSparkMax.ControlType.kVelocity);
+            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+          } else {
+            pid.setReference(speedSetPoint * -1, CANSparkMax.ControlType.kVelocity);
+            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+          }
+        },
+
+        interrupted -> {
+          pid.setReference(0, CANSparkMax.ControlType.kVelocity);
+          SmartDashboard.putNumber("Motor Speed", 0);
+        },
+
+        () -> false,
+
+        this);
+  }
+
+  public Command closedLoopControlPosition() {
+    return new FunctionalCommand(
+        () -> {
           kP = SmartDashboard.getNumber("kP", kP);
           kI = SmartDashboard.getNumber("kI", kI);
           kD = SmartDashboard.getNumber("kD", kD);
@@ -125,31 +161,31 @@ public class CanSparkFlex extends SubsystemBase {
           pid.setI(kI);
           pid.setD(kD);
           pid.setD(kFF);
-        }, 
-        
+        },
+
         () -> {
           if (dir == 0) {
-            pid.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
-            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+            pid.setReference(positionSetPoint, CANSparkMax.ControlType.kPosition);
+            SmartDashboard.putNumber("Motor Position", myEncoder.getPosition());
           } else {
-            pid.setReference(setPoint * -1, CANSparkMax.ControlType.kVelocity);
-            SmartDashboard.putNumber("Motor Speed", myEncoder.getVelocity());
+            pid.setReference(positionSetPoint * -1, CANSparkMax.ControlType.kPosition);
+            SmartDashboard.putNumber("Motor Position", myEncoder.getPosition());
           }
-        }, 
-        
+        },
+
         interrupted -> {
-          pid.setReference(0, CANSparkMax.ControlType.kVelocity);
-          SmartDashboard.putNumber("Motor Speed", 0);
-        }, 
-        
-        () -> false, 
-        
+          pid.setReference(0, CANSparkMax.ControlType.kPosition);
+          SmartDashboard.putNumber("Motor Position", 0);
+        },
+
+        () -> false,
+
         this);
   }
 
   @Override
   public void periodic() {
-    
+
   }
 
 }

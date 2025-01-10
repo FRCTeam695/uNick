@@ -12,6 +12,7 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LimitSwitches;
 import frc.robot.subsystems.NetworkTables;
 import frc.robot.subsystems.Servos;
+import frc.robot.subsystems.SwerveDrive;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -105,9 +106,10 @@ public class RobotContainer {
   private final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
   private final LED LED = new LED();
   private final Servos m_Servo = new Servos();
-  private final DriveTrain driveTrain = new DriveTrain();
+  //private final DriveTrain driveTrain = new DriveTrain();
   private final LimitSwitches limitSwitch = new LimitSwitches();
   private final NetworkTables networkTable = new NetworkTables();
+  //private final SwerveDrive swerve = new SwerveDrive();
 
   //_________________________________________________________________________________________
 
@@ -120,7 +122,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     //m_canSparkFlex.setDefaultCommand(m_canSparkFlex.moveMotor(leftXAxis));
-    //xButton.whileTrue(m_canSparkFlex.closedLoopControl());
+    //xButton.whileTrue(m_canSparkFlex.closedLoopControlVelocity());
 
     //LED.setDefaultCommand(LED.controllerDirectionRGBCommand(leftXAxis, 0, 1).ignoringDisable(true));
     //LED.setDefaultCommand(LED.controllerDirectionRGBCommand(leftYAxis, 2, 3).ignoringDisable(true));
@@ -145,6 +147,9 @@ public class RobotContainer {
     //driveTrain.setDefaultCommand(driveTrain.tankDriveCommand(leftYAxis, rightYAxis));
 
     //limitSwitch.setDefaultCommand(limitSwitch.limitSwitch(leftXAxis));
+
+    //swerve.setDefaultCommand(swerve.test(leftYAxis, leftXAxis, rightXAxis));
+    //swerve.setDefaultCommand(swerve.swerveCommand(leftYAxis, leftXAxis, rightXAxis));
 
   }
 }

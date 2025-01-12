@@ -4,8 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.arcadeDriveCommand;
+import frc.robot.commands.tankDriveCommand;
 import frc.robot.subsystems.CanSparkFlex;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
@@ -28,12 +29,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   //declaring controllers/joysticks
-  private final CommandXboxController controller = new CommandXboxController(0);
+  public final static CommandXboxController controller = new CommandXboxController(0);
   public final static CommandJoystick leftJoystick = new CommandJoystick(0);
   public final static CommandJoystick rightJoystick = new CommandJoystick(1);
-
-  //public final TankDrive m_driveCommand = new TankDrive(DriveTrain);
-
 
   //declaring controller buttons
   private final Trigger xButton = controller.x();
@@ -41,11 +39,9 @@ public class RobotContainer {
   private final Trigger bButton = controller.b();
   private final Trigger yButton = controller.y();
 
-
   //declaring controller triggers
   private final Trigger rBumper = controller.rightBumper();
   private final Trigger lBumper = controller.leftBumper();
-
 
   //declaring controller axes
   private final DoubleSupplier leftXAxis = () -> controller.getRawAxis(0);
@@ -71,14 +67,12 @@ public class RobotContainer {
   private final Trigger leftJoystickButton11 = leftJoystick.button(11);
   private final Trigger leftJoystickButton12 = leftJoystick.button(12);
 
-
   //declaring leftjoystick axes
   private final DoubleSupplier leftJoystickXAxis = () -> leftJoystick.getRawAxis(0);
   private final DoubleSupplier leftJoystickYAxis = () -> leftJoystick.getRawAxis(1);
   private final DoubleSupplier leftJoystickZAxis = () -> leftJoystick.getRawAxis(2);
 
   //__________________________________________________________________________________________
-
 
   //declaring rightJoystick buttons
   private final Trigger rightJoystickButton1 = rightJoystick.button(1);
@@ -103,14 +97,16 @@ public class RobotContainer {
   //___________________________________________________________________________________________
 
   //linking subsystems
-  private final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
+  //private final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
   private final LED LED = new LED();
   private final Servos m_Servo = new Servos();
-  //private final DriveTrain driveTrain = new DriveTrain();
+  private final DriveTrain driveTrain = new DriveTrain();
   private final LimitSwitches limitSwitch = new LimitSwitches();
   private final NetworkTables networkTable = new NetworkTables();
-  //private final SwerveDrive swerve = new SwerveDrive();
+  private final SwerveDrive swerve = new SwerveDrive();
 
+  private final arcadeDriveCommand arcadeDriveCommand = new arcadeDriveCommand(driveTrain);
+  private final tankDriveCommand tankDriveCommand = new tankDriveCommand(driveTrain);
   //_________________________________________________________________________________________
 
   public RobotContainer() {
@@ -145,11 +141,17 @@ public class RobotContainer {
     //rightJoystickButton1.whileTrue(m_Servo.servoTurnLeft());
 
     //driveTrain.setDefaultCommand(driveTrain.tankDriveCommand(leftYAxis, rightYAxis));
+    driveTrain.setDefaultCommand(arcadeDriveCommand);
+    //driveTrain.setDefaultCommand(tankDriveCommand);
 
     //limitSwitch.setDefaultCommand(limitSwitch.limitSwitch(leftXAxis));
 
     //swerve.setDefaultCommand(swerve.test(leftYAxis, leftXAxis, rightXAxis));
     //swerve.setDefaultCommand(swerve.swerveCommand(leftYAxis, leftXAxis, rightXAxis));
 
+  }
+
+  public Command getAutonomousCommand() {
+    return arcadeDriveCommand;
   }
 }

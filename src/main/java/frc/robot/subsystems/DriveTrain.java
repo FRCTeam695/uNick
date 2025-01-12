@@ -9,6 +9,7 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -29,10 +30,15 @@ public class DriveTrain extends SubsystemBase {
     // 3.) Connect to NCS wireless network
     // 4.) Hopefully turn off drivetrain
 
-    CANSparkMax leftFront = new CANSparkMax(10, CANSparkLowLevel.MotorType.kBrushless);
-    CANSparkMax leftBack = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
-    CANSparkMax rightFront = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
-    CANSparkMax rightBack = new CANSparkMax(13, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax leftFront = new CANSparkMax(Constants.CANID.leftFrontID, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax leftBack = new CANSparkMax(Constants.CANID.leftBackID, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax rightFront = new CANSparkMax(Constants.CANID.rightFrontID, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax rightBack = new CANSparkMax(Constants.CANID.rightBackID, CANSparkLowLevel.MotorType.kBrushless);
+
+    private RelativeEncoder leftEncoder = leftFront.getEncoder();
+    private RelativeEncoder rightEncoder = rightFront.getEncoder();
+
+    private DifferentialDrive differentialDrive;
 
     public DriveTrain() {
         leftFront.restoreFactoryDefaults();
@@ -40,42 +46,24 @@ public class DriveTrain extends SubsystemBase {
         rightFront.restoreFactoryDefaults();
         rightBack.restoreFactoryDefaults();
 
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
 
         leftBack.follow(leftFront);
         rightBack.follow(rightFront);
 
-        //leftFront.setInverted(true);
-        rightFront.setInverted(true);
+        differentialDrive = new DifferentialDrive(leftFront, rightFront);
+
+        rightFront.setInverted(false);
+        leftFront.setInverted(true);
     }
 
-    // public void tankDrive(double leftSpeed, double rightSpeed) {
-    //     differentialDrive.tankDrive(leftSpeed, rightSpeed);
-    // }
-
-    public Command tankDriveCommand(DoubleSupplier leftSpeed, DoubleSupplier rightSpeed) {
-
-        return new FunctionalCommand(
-                () -> {
-                },
-
-                () -> {
-                    leftFront.set(leftSpeed.getAsDouble());
-                    rightFront.set(rightSpeed.getAsDouble());
-                },
-
-                interrupted -> {
-                    leftFront.set(0);
-                    rightFront.set(0);
-                },
-
-                () -> false,
-
-                this);
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        differentialDrive.tankDrive(leftSpeed, rightSpeed);
     }
 
-    public Command arcadeDriveCommand() {
-        return new FunctionalCommand(() -> {}, () -> {}, interrupted -> {}, () -> false, this);
+    public void arcadeDrive(double forwardSpeed, double rotationSpeed) {
+        differentialDrive.arcadeDrive(forwardSpeed, rotationSpeed);
     }
-
     
 }

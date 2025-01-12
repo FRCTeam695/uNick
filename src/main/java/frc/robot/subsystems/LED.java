@@ -11,12 +11,12 @@ import java.util.function.DoubleSupplier;
 
 public class LED extends SubsystemBase {
 
-    int[] LEDShift = { 0, 1, 1, 1, 0 };
-    long counter = 0;
+    private int[] LEDShift = { 0, 1, 1, 1, 0 };
+    private long counter = 0;
 
-    AddressableLED realLED;
+    private AddressableLED realLED;
 
-    AddressableLEDBuffer realLEDBuffer;
+    private AddressableLEDBuffer realLEDBuffer;
 
     public LED() {
 

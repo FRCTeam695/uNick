@@ -37,27 +37,26 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class CanSparkFlex extends SubsystemBase {
   // use parameter in commands
-  public CANSparkFlex motor1;
-  public RelativeEncoder myEncoder;
-  public SparkPIDController pid;
-  // public final LEDSubsystem motorLED = new LEDSubsystem();
+  private CANSparkFlex motor1;
+  private RelativeEncoder myEncoder;
+  private SparkPIDController pid;
 
-  double kP = 0.00005;
-  double kI = 0.000001;
-  double kD = 0.002;
-  double kFF = 0.0001;
+  private double kP = Constants.PIDConstants.kP;
+  private double kI = Constants.PIDConstants.kI;
+  private double kD = Constants.PIDConstants.kD;
+  private double kFF = Constants.PIDConstants.kFF;
 
-  int dir = 0;
+  private int dir = 0;
 
-  double kMinOutput = -1;
-  double kMaxOutput = 1;
+  private double kMinOutput = -1;
+  private double kMaxOutput = 1;
 
-  double speedSetPoint = 1000;
-  double positionSetPoint = 1000;
+  private double speedSetPoint = 1000;
+  private double positionSetPoint = 1000;
 
   public CanSparkFlex() {
 
-    motor1 = new CANSparkFlex(51, CANSparkLowLevel.MotorType.kBrushless);
+    motor1 = new CANSparkFlex(Constants.CANID.testMotor, CANSparkLowLevel.MotorType.kBrushless);
     myEncoder = motor1.getEncoder(); // getEncoder returns a relative encoder
 
     motor1.restoreFactoryDefaults();
@@ -70,14 +69,17 @@ public class CanSparkFlex extends SubsystemBase {
     pid.setD(kD);
     pid.setFF(kFF);
 
-    // Set the minimum and maximum outputs of the motor [-1, 1]
-    pid.setOutputRange(kMinOutput, kMaxOutput);
+    // Preferences.initDouble(Constants.PIDConstants.kPKey, kP);
+    // Preferences.initDouble(Constants.PIDConstants.kIKey, kI);
+    // Preferences.initDouble(Constants.PIDConstants.kDKey, kD);
+    // Preferences.initDouble(Constants.PIDConstants.kFFKey, kFF);
+    // Preferences.initInt("Direction", dir);
 
-    SmartDashboard.putNumber("kP", kP);
-    SmartDashboard.putNumber("kI", kI);
-    SmartDashboard.putNumber("kD", kD);
-    SmartDashboard.putNumber("kFF", kFF);
-    SmartDashboard.putNumber("direction", dir);
+    // SmartDashboard.putNumber("kP", kP);
+    // SmartDashboard.putNumber("kI", kI);
+    // SmartDashboard.putNumber("kD", kD);
+    // SmartDashboard.putNumber("kFF", kFF);
+    //SmartDashboard.putNumber("direction", dir);
 
     // SmartDashboard.putNumber("kIz", kIz);
     // SmartDashboard.putNumber("kFF", kFF);
@@ -120,7 +122,8 @@ public class CanSparkFlex extends SubsystemBase {
           // kI = SmartDashboard.getNumber("kI", kI);
           // kD = SmartDashboard.getNumber("kD", kD);
           // kFF = SmartDashboard.getNumber("kFF", kFF);
-          dir = (int) SmartDashboard.getNumber("direction", dir);
+
+          dir = (int) Preferences.getInt("Direction", dir);
 
           // pid.setP(kP);
           // pid.setI(kI);
@@ -151,11 +154,11 @@ public class CanSparkFlex extends SubsystemBase {
   public Command closedLoopControlPosition() {
     return new FunctionalCommand(
         () -> {
-          kP = SmartDashboard.getNumber("kP", kP);
-          kI = SmartDashboard.getNumber("kI", kI);
-          kD = SmartDashboard.getNumber("kD", kD);
-          kFF = SmartDashboard.getNumber("kFF", kFF);
-          dir = (int) SmartDashboard.getNumber("direction", dir);
+          kP = Preferences.getDouble("kP", kP);
+          kI = Preferences.getDouble("kI", kI);
+          kD = Preferences.getDouble("kD", kD);
+          kFF = Preferences.getDouble("kFF", kFF);
+          dir = (int) Preferences.getInt("Direction", dir);
 
           pid.setP(kP);
           pid.setI(kI);

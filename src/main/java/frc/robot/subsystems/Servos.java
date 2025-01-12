@@ -11,7 +11,7 @@ import java.util.function.DoubleSupplier;
 
 public class Servos extends SubsystemBase {
 
-    Servo exampleServo = new Servo(0);
+    private Servo exampleServo = new Servo(0);
 
     public Servos() {
 

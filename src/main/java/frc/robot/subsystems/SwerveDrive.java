@@ -14,21 +14,21 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class SwerveDrive extends SubsystemBase {
 
-    DoubleSupplier FWD;
-    DoubleSupplier STR;
-    DoubleSupplier RCW;
+    private DoubleSupplier FWD;
+    private DoubleSupplier STR;
+    private DoubleSupplier RCW;
 
-    double width;
-    double length;
-    double hypotenuse;
-    double angle;
+    private double width;
+    private double length;
+    private double hypotenuse;
+    private double angle;
 
-    TalonFX speedMotor;
-    TalonFX directionMotor;
+    private TalonFX speedMotor;
+    private TalonFX directionMotor;
 
-    PIDController pid;
+    private PIDController pid;
 
-    CANcoder encoder;
+    private CANcoder encoder;
 
     public SwerveDrive() {
         width = 100 / 2; // need to get the real numbers

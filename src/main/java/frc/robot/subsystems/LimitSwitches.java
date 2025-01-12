@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimitSwitches extends SubsystemBase {
-    DigitalInput limitSwitch;
+    private DigitalInput limitSwitch;
 
     public LimitSwitches() {
         limitSwitch = new DigitalInput(0);

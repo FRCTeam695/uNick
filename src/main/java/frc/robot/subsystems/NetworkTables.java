@@ -17,12 +17,12 @@ public class NetworkTables extends SubsystemBase {
     private double x = 0;
     private double y = 0;
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("frc695_test_table");
+    private NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private NetworkTable table = inst.getTable("frc695_test_table");
 
-    DoublePublisher xPub = table.getDoubleTopic("x").publish();
+    private DoublePublisher xPub = table.getDoubleTopic("x").publish();
 
-    DoublePublisher yPub = table.getDoubleTopic("y").publish();
+    private DoublePublisher yPub = table.getDoubleTopic("y").publish();
 
     
 

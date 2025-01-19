@@ -34,24 +34,14 @@ public class DriveTrain extends SubsystemBase {
     private SparkMax rightFront = new SparkMax(Constants.CANID.rightFrontID, MotorType.kBrushless);
     private SparkMax rightBack = new SparkMax(Constants.CANID.rightBackID, MotorType.kBrushless);
 
-    private SparkMax winchMotor = new SparkMax(Constants.CANID.winchMotorID, MotorType.kBrushless);
-
     private RelativeEncoder leftEncoder = leftFront.getEncoder();
     private RelativeEncoder rightEncoder = rightFront.getEncoder();
 
     private DifferentialDrive differentialDrive;
 
     public DriveTrain() {
-        // leftFront.restoreFactoryDefaults();
-        // leftBack.restoreFactoryDefaults();
-        // rightFront.restoreFactoryDefaults();
-        // rightBack.restoreFactoryDefaults();
-
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
-
-        // leftBack.follow(leftFront);
-        // rightBack.follow(rightFront);
 
         differentialDrive = new DifferentialDrive(leftFront, rightFront);
 
@@ -59,8 +49,6 @@ public class DriveTrain extends SubsystemBase {
         SparkMaxConfig leftFrontSparkConfig = new SparkMaxConfig();
         SparkMaxConfig rightBackSparkConfig = new SparkMaxConfig();
         SparkMaxConfig leftBackSparkConfig = new SparkMaxConfig();
-
-        SparkMaxConfig winchMotorConfig = new SparkMaxConfig();
 
         rightFrontSparkConfig.idleMode(IdleMode.kBrake);
         rightFrontSparkConfig.inverted(false);
@@ -91,19 +79,6 @@ public class DriveTrain extends SubsystemBase {
         differentialDrive.arcadeDrive(forwardSpeed, rotationSpeed);
     }
 
-    public Command winchMotorCommand(DoubleSupplier speed) {
-
-        return new FunctionalCommand(
-
-            () -> {}, 
-
-            () -> winchMotor.set(speed.getAsDouble()),
-
-            interrupted -> winchMotor.set(0), 
-            
-            () -> false,
-
-            this);
-    }
+    
 
 }

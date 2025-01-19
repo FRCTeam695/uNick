@@ -2,19 +2,17 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 
 public class Servos extends SubsystemBase {
 
-    private Servo exampleServo = new Servo(0);
+    private Servo exampleServo;
 
     public Servos() {
-
+        exampleServo = new Servo(0);
     }
 
     public double controllerXDirection(double xaxis) {
@@ -29,8 +27,6 @@ public class Servos extends SubsystemBase {
 
                 () -> {
                     double axis = controllerXDirection(xaxis.getAsDouble());
-
-                    SmartDashboard.putNumber("Servo Speed", axis);
 
                     if ((axis > 0.6) || (axis < 0.4)) {
                         exampleServo.set(axis);

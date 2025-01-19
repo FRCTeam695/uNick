@@ -10,9 +10,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +33,8 @@ public class DriveTrain extends SubsystemBase {
     private SparkMax leftBack = new SparkMax(Constants.CANID.leftBackID, MotorType.kBrushless);
     private SparkMax rightFront = new SparkMax(Constants.CANID.rightFrontID, MotorType.kBrushless);
     private SparkMax rightBack = new SparkMax(Constants.CANID.rightBackID, MotorType.kBrushless);
+
+    private SparkMax winchMotor = new SparkMax(Constants.CANID.winchMotorID, MotorType.kBrushless);
 
     private RelativeEncoder leftEncoder = leftFront.getEncoder();
     private RelativeEncoder rightEncoder = rightFront.getEncoder();
@@ -61,6 +60,8 @@ public class DriveTrain extends SubsystemBase {
         SparkMaxConfig rightBackSparkConfig = new SparkMaxConfig();
         SparkMaxConfig leftBackSparkConfig = new SparkMaxConfig();
 
+        SparkMaxConfig winchMotorConfig = new SparkMaxConfig();
+
         rightFrontSparkConfig.idleMode(IdleMode.kBrake);
         rightFrontSparkConfig.inverted(false);
 
@@ -71,12 +72,15 @@ public class DriveTrain extends SubsystemBase {
 
         leftBackSparkConfig.follow(Constants.CANID.leftFrontID);
 
-        rightFront.configure(rightFrontSparkConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-        rightBack.configure(rightBackSparkConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-        leftFront.configure(leftFrontSparkConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-        leftBack.configure(leftBackSparkConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        rightFront.configure(rightFrontSparkConfig, SparkBase.ResetMode.kResetSafeParameters,
+                SparkBase.PersistMode.kPersistParameters);
+        rightBack.configure(rightBackSparkConfig, SparkBase.ResetMode.kResetSafeParameters,
+                SparkBase.PersistMode.kPersistParameters);
+        leftFront.configure(leftFrontSparkConfig, SparkBase.ResetMode.kResetSafeParameters,
+                SparkBase.PersistMode.kPersistParameters);
+        leftBack.configure(leftBackSparkConfig, SparkBase.ResetMode.kResetSafeParameters,
+                SparkBase.PersistMode.kPersistParameters);
 
-        
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -86,5 +90,20 @@ public class DriveTrain extends SubsystemBase {
     public void arcadeDrive(double forwardSpeed, double rotationSpeed) {
         differentialDrive.arcadeDrive(forwardSpeed, rotationSpeed);
     }
-    
+
+    public Command winchMotorCommand(DoubleSupplier speed) {
+
+        return new FunctionalCommand(
+
+            () -> {}, 
+
+            () -> winchMotor.set(speed.getAsDouble()),
+
+            interrupted -> winchMotor.set(0), 
+            
+            () -> false,
+
+            this);
+    }
+
 }

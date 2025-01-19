@@ -1,19 +1,21 @@
 package frc.robot.subsystems;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NetworkTables extends SubsystemBase {
-    private int count = 0;
-    private int maxCount = 50;
+    private int minXCount = 0;
+    private int maxXCount = 40;
+
+    private int minYCount = 0;
+    private int maxYCount = 30;
+
     private double xInc = 0.5;
     private double yInc = 1;
+    
     private double x = 0;
     private double y = 0;
 
@@ -38,17 +40,17 @@ public class NetworkTables extends SubsystemBase {
     public void periodic() {
 
         x = x + xInc;
-        if (x == 40) {
+        if (x == maxXCount) {
             xInc = xInc * -1;
         }
-        if (x == 0) {
+        if (x == minXCount) {
             xInc = xInc * -1;
         }
         y = y + yInc;
-        if (y == 30) {
+        if (y == maxYCount) {
             yInc = yInc * -1;
         }
-        if (y == 0) {
+        if (y == minYCount) {
             yInc = yInc * -1;
         }
         xPub.set(x);

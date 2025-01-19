@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -17,6 +16,8 @@ public class LED extends SubsystemBase {
     private AddressableLED realLED;
 
     private AddressableLEDBuffer realLEDBuffer;
+
+    private double xaxis;
 
     public LED() {
 
@@ -137,84 +138,6 @@ public class LED extends SubsystemBase {
         return controllerXDirection(xaxis) < 0.5;
     }
 
-    public void controllerDirectionRGB(double xaxis, int leftColor, int rightColor) {
-
-        double leftBrightness = xaxis;
-        double rightBrightness = xaxis;
-
-        if (Math.round(xaxis * 10) != 0) {
-
-            if (controllerXDirectionBoolRight(xaxis)) {
-
-                if (rightColor == 0) {
-                    setRed(rightBrightness);
-                }
-
-                if (rightColor == 1) {
-                    setOrange(rightBrightness);
-                }
-
-                if (rightColor == 2) {
-                    setYellow(rightBrightness);
-                }
-
-                if (rightColor == 3) {
-                    setGreen(rightBrightness);
-                }
-
-                if (rightColor == 4) {
-                    setBlue(rightBrightness);
-                }
-
-                if (rightColor == 5) {
-                    setPurple(rightBrightness);
-                }
-
-                if (rightColor == 6) {
-                    setWhite(rightBrightness);
-                }
-
-            }
-
-            if (controllerXDirectionBoolLeft(xaxis)) {
-
-                if (leftColor == 0) {
-                    setRed(leftBrightness);
-                }
-
-                if (leftColor == 1) {
-                    setOrange(leftBrightness);
-                }
-
-                if (leftColor == 2) {
-                    setYellow(leftBrightness);
-                }
-
-                if (leftColor == 3) {
-                    setGreen(leftBrightness);
-                }
-
-                if (leftColor == 4) {
-                    setBlue(leftBrightness);
-                }
-
-                if (leftColor == 5) {
-                    setPurple(leftBrightness);
-                }
-
-                if (leftColor == 6) {
-                    setWhite(leftBrightness);
-                }
-
-            }
-
-        } else {
-
-            setLEDOff();
-
-        }
-    }
-
     public Command controllerDirectionRGBCommand(DoubleSupplier xaxis, int leftColor, int rightColor) {
         return new FunctionalCommand(
 
@@ -224,11 +147,76 @@ public class LED extends SubsystemBase {
 
                 () -> {
 
-                    controllerDirectionRGB(xaxis.getAsDouble(), leftColor, rightColor);
+                    this.xaxis = xaxis.getAsDouble();
+
+                    if (controllerXDirectionBoolRight(this.xaxis)) {
+
+                        if (rightColor == 0) {
+                            setRed(this.xaxis);
+                        }
+        
+                        if (rightColor == 1) {
+                            setOrange(this.xaxis);
+                        }
+        
+                        if (rightColor == 2) {
+                            setYellow(this.xaxis);
+                        }
+        
+                        if (rightColor == 3) {
+                            setGreen(this.xaxis);
+                        }
+        
+                        if (rightColor == 4) {
+                            setBlue(this.xaxis);
+                        }
+        
+                        if (rightColor == 5) {
+                            setPurple(this.xaxis);
+                        }
+        
+                        if (rightColor == 6) {
+                            setWhite(this.xaxis);
+                        }
+        
+                    }
+        
+                    if (controllerXDirectionBoolLeft(this.xaxis)) {
+        
+                        if (leftColor == 0) {
+                            setRed(this.xaxis);
+                        }
+        
+                        if (leftColor == 1) {
+                            setOrange(this.xaxis);
+                        }
+        
+                        if (leftColor == 2) {
+                            setYellow(this.xaxis);
+                        }
+        
+                        if (leftColor == 3) {
+                            setGreen(this.xaxis);
+                        }
+        
+                        if (leftColor == 4) {
+                            setBlue(this.xaxis);
+                        }
+        
+                        if (leftColor == 5) {
+                            setPurple(this.xaxis);
+                        }
+        
+                        if (leftColor == 6) {
+                            setWhite(this.xaxis);
+                        }
+        
+                    }
 
                 },
 
                 interrupted -> {
+                    setLEDOff();
                 },
 
                 () -> false,
@@ -238,22 +226,19 @@ public class LED extends SubsystemBase {
 
     // __________________________________________________________________________________________
 
-    public void servoRGB(double axis, int leftColor, int rightColor) {
-
-        double leftBrightness = axis;
-        double rightBrightness = axis;
+    public void shiftRGB(double axis, int leftColor, int rightColor) {
 
         if (Math.round(axis * 10) != 0) {
 
             if (controllerXDirectionBoolRight(axis)) {
 
-                LEDShiftIterateRight(leftBrightness, rightColor);
+                LEDShiftIterateRight(axis, rightColor);
 
             }
 
             if (controllerXDirectionBoolLeft(axis)) {
 
-                LEDShiftIterateLeft(rightBrightness, leftColor);
+                LEDShiftIterateLeft(axis, leftColor);
 
             }
 
@@ -417,7 +402,7 @@ public class LED extends SubsystemBase {
                 },
 
                 () -> {
-                    servoRGB(axis.getAsDouble(), leftColor, rightColor);
+                    shiftRGB(axis.getAsDouble(), leftColor, rightColor);
                 },
 
                 interrupted -> {
@@ -476,11 +461,5 @@ public class LED extends SubsystemBase {
                 () -> false,
 
                 this);
-    }
-
-    // _________________________________________________
-
-    public void rainbow() {
-
     }
 }

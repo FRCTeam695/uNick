@@ -6,7 +6,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -14,14 +13,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class SwerveDrive extends SubsystemBase {
 
-    private DoubleSupplier FWD;
-    private DoubleSupplier STR;
-    private DoubleSupplier RCW;
-
     private double width;
     private double length;
     private double hypotenuse;
-    private double angle;
 
     private TalonFX speedMotor;
     private TalonFX directionMotor;
@@ -31,11 +25,10 @@ public class SwerveDrive extends SubsystemBase {
     private CANcoder encoder;
 
     public SwerveDrive() {
-        width = 100 / 2; // need to get the real numbers
+        width = 100 / 2;
         length = 100 / 2;
         hypotenuse = Math.sqrt(Math.pow(width, 2) + Math.pow(length, 2));
-        angle = Math.atan(width / length);
-
+        
         speedMotor = new TalonFX(23);
         directionMotor = new TalonFX(22);
 

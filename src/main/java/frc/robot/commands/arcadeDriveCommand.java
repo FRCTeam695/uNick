@@ -1,10 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 
@@ -18,14 +15,12 @@ public class arcadeDriveCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-    System.out.println("Starting arcadeDriveCommand");
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
-    double forwardSpeed = RobotContainer.controller.getRawAxis(1);
-    double turningSpeed = RobotContainer.controller.getRawAxis(0);
+    double forwardSpeed = RobotContainer.controller.getRawAxis(Constants.driveConstants.leftAxis);
+    double turningSpeed = RobotContainer.controller.getRawAxis(Constants.driveConstants.rightAxis);
     driveTrain.arcadeDrive(forwardSpeed, turningSpeed);
   }
 

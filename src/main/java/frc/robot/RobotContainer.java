@@ -21,6 +21,8 @@ import frc.robot.subsystems.SwerveDrive;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -116,8 +118,11 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
-    algaeMove.setDefaultCommand(algaeMove.moveMotorCommand(leftTrigger, rightTrigger));
-    algaeCollect.setDefaultCommand(algaeCollect.collectMotorCommand(lBumper, rBumper));
+    algaeMove.setDefaultCommand(new ParallelCommandGroup(
+      algaeMove.moveMotorCommand(leftTrigger, rightTrigger),
+      algaeCollect.collectMotorCommand(lBumper, rBumper)
+    ));
+    algaeCollect.setDefaultCommand(Commands.parallel(algaeMove.moveMotorCommand(leftTrigger, rightTrigger), algaeCollect.collectMotorCommand(lBumper, rBumper)));
     driveTrain.setDefaultCommand(arcadeDriveCommand);
   }
 }

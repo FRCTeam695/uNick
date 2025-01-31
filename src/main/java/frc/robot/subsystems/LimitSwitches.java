@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -16,22 +15,24 @@ public class LimitSwitches extends SubsystemBase {
 
     public Command limitSwitch(DoubleSupplier control) {
         return new FunctionalCommand(
-            () -> {},
+                () -> {
+                },
 
-            () -> {
-                if (control.getAsDouble() != 0) {
-                    if (limitSwitch.get()) {
-                        System.out.println("THE LIMIT SWITCH WORKS XDXD");
-                    } else {
-                        System.out.println("NOT WORKING :(((");
+                () -> {
+                    if (control.getAsDouble() != 0) {
+                        if (limitSwitch.get()) {
+                            System.out.println("THE LIMIT SWITCH WORKS XDXD");
+                        } else {
+                            System.out.println("NOT WORKING :(((");
+                        }
                     }
-                }
-            },
+                },
 
-            interrupted -> {},
+                interrupted -> {
+                },
 
-            () -> false,
+                () -> false,
 
-            this);
+                this);
     }
 }

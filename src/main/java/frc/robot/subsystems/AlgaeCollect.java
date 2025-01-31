@@ -30,7 +30,7 @@ public class AlgaeCollect extends SubsystemBase {
 
     public void configMotors() {
         collectConfig
-            .smartCurrentLimit(10)
+            .smartCurrentLimit(40)
             .idleMode(IdleMode.kBrake);
 
         collectMotor.configure(collectConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

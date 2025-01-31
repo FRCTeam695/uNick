@@ -22,7 +22,8 @@ public final class Constants {
     public static final int rightFrontID = 11;
     public static final int rightBackID = 13;
 
-    public static final int winchMotorID = 9;
+    public static final int moveMotorID = 53;
+    public static final int collectMotorID = 54;
   }
 
   public static final class driveConstants {

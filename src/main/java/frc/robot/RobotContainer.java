@@ -8,8 +8,10 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.arcadeDriveCommand;
 import frc.robot.commands.moveMotor;
 import frc.robot.commands.tankDriveCommand;
+import frc.robot.subsystems.AlgaeCollect;
+import frc.robot.subsystems.AlgaeMove;
 import frc.robot.subsystems.CanSparkFlex;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.AlgaeCollect;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LimitSwitches;
@@ -101,7 +103,8 @@ public class RobotContainer {
   private static final LimitSwitches limitSwitch = new LimitSwitches();
   private static final NetworkTables networkTable = new NetworkTables();
   private static final SwerveDrive swerve = new SwerveDrive();
-  private static final Climber climb = new Climber();
+  private static final AlgaeMove algaeMove = new AlgaeMove();
+  private static final AlgaeCollect algaeCollect = new AlgaeCollect();
 
   private static final arcadeDriveCommand arcadeDriveCommand = new arcadeDriveCommand(driveTrain);
   private static final tankDriveCommand tankDriveCommand = new tankDriveCommand(driveTrain);
@@ -113,6 +116,8 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
-    rightJoystickButton11.onTrue(climb.winchMotorCommand(rightJoystickXAxis));
+    algaeMove.setDefaultCommand(algaeMove.moveMotorCommand(leftTrigger, rightTrigger));
+    algaeCollect.setDefaultCommand(algaeCollect.collectMotorCommand(lBumper, rBumper));
+    driveTrain.setDefaultCommand(arcadeDriveCommand);
   }
 }

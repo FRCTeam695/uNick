@@ -30,4 +30,10 @@ public final class Constants {
     public static final int leftAxis = 1;
     public static final int rightAxis = 0;
   }
+
+  public static final class controllerConstants {
+    public static final int controllerPort = 0;
+    public static final int leftJoystickPort = 0;
+    public static final int rightJoystickPort = 0;
+  }
 }

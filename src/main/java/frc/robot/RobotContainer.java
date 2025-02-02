@@ -8,10 +8,9 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.arcadeDriveCommand;
 import frc.robot.commands.moveMotor;
 import frc.robot.commands.tankDriveCommand;
-import frc.robot.subsystems.AlgaeCollect;
-import frc.robot.subsystems.AlgaeMove;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CanSparkFlex;
-import frc.robot.subsystems.AlgaeCollect;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LimitSwitches;
@@ -30,9 +29,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   //declaring controllers/joysticks
-  public final static CommandXboxController controller = new CommandXboxController(0);
-  public final static CommandJoystick leftJoystick = new CommandJoystick(0);
-  public final static CommandJoystick rightJoystick = new CommandJoystick(0);
+  public final static CommandXboxController controller = new CommandXboxController(Constants.controllerConstants.controllerPort);
+  public final static CommandJoystick leftJoystick = new CommandJoystick(Constants.controllerConstants.leftJoystickPort);
+  public final static CommandJoystick rightJoystick = new CommandJoystick(Constants.controllerConstants.rightJoystickPort);
 
   //declaring controller buttons
 
@@ -105,8 +104,7 @@ public class RobotContainer {
   private static final LimitSwitches limitSwitch = new LimitSwitches();
   private static final NetworkTables networkTable = new NetworkTables();
   private static final SwerveDrive swerve = new SwerveDrive();
-  private static final AlgaeMove algaeMove = new AlgaeMove();
-  private static final AlgaeCollect algaeCollect = new AlgaeCollect();
+  private static final Intake intake = new Intake();
 
   private static final arcadeDriveCommand arcadeDriveCommand = new arcadeDriveCommand(driveTrain);
   private static final tankDriveCommand tankDriveCommand = new tankDriveCommand(driveTrain);
@@ -118,11 +116,13 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
-    algaeMove.setDefaultCommand(new ParallelCommandGroup(
-      algaeMove.moveMotorCommand(leftTrigger, rightTrigger),
-      algaeCollect.collectMotorCommand(lBumper, rBumper)
-    ));
-    algaeCollect.setDefaultCommand(Commands.parallel(algaeMove.moveMotorCommand(leftTrigger, rightTrigger), algaeCollect.collectMotorCommand(lBumper, rBumper)));
-    driveTrain.setDefaultCommand(arcadeDriveCommand);
+    // intake.setDefaultCommand(new ParallelCommandGroup(
+    //   intake.moveMotorCommand(leftTrigger, rightTrigger),
+    //   intake.collectMotorCommand(lBumper, rBumper)
+    // ));
+
+    // driveTrain.setDefaultCommand(arcadeDriveCommand);
+
+    bButton.onTrue(intake.getEncoder());
   }
 }

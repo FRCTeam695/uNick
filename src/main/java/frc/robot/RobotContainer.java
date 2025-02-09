@@ -114,6 +114,10 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings(); 
   }
+
+  public static LED getLED() {
+    return LED;
+  }
   
   private void configureBindings() {
     // intake.setDefaultCommand(new ParallelCommandGroup(
@@ -122,7 +126,11 @@ public class RobotContainer {
     // ));
 
     driveTrain.setDefaultCommand(arcadeDriveCommand);
-    bButton.whileTrue(intake.setIntakeHeight(() -> 10));
-    intake.setDefaultCommand(intake.moveMotorCommand(leftTrigger, rightTrigger));
+    bButton.whileTrue(intake.setIntakeHeight(() -> 15));
+    aButton.whileTrue(intake.zeroCommand());
+    yButton.whileTrue(intake.zeroCommand2());
+    xButton.whileTrue(intake.zeroCommand3());
+    lBumper.onTrue(intake.zeroCommand4());
+    //intake.setDefaultCommand(intake.moveMotorCommand(leftTrigger, rightTrigger));
   }
 }

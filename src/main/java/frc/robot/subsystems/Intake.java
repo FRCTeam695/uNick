@@ -13,11 +13,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Intake extends SubsystemBase {
 
@@ -30,6 +33,9 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder encoder;
 
     private SparkClosedLoopController pidControl;
+
+    private AddressableLED realLED;
+    private AddressableLEDBuffer realLEDBuffer;
 
     public Intake() {
 
@@ -67,23 +73,25 @@ public class Intake extends SubsystemBase {
     public Command setIntakeHeight(DoubleSupplier ref) {
         return new FunctionalCommand(
             () -> {
-                
+                RobotContainer.getLED().setLEDOff();
+                pidControl.setReference(-1.0 * ref.getAsDouble(), ControlType.kPosition);
+                collectMotor.set(-0.5);
             },
 
             () -> {
-                
-                pidControl.setReference(-1.0 * ref.getAsDouble(), ControlType.kPosition);
-                collectMotor.set(-0.5);
-                
-                // if (encoder.getPosition() < ref.getAsDouble()) {
-                //     moveMotor.set(0.1);
-                // }
+                System.out.println(encoder.getPosition());
+                if (encoder.getPosition() < -15) {
+                    moveMotor.set(0.0);
+                    collectMotor.set(0.0);
+                    RobotContainer.getLED().setColor(7);
+                }
             },
 
             interrupted -> {
                 pidControl.setReference(0, ControlType.kPosition);
                 collectMotor.set(0);
-                //moveMotor.set(0);
+                RobotContainer.getLED().setLEDOff();
+                // //moveMotor.set(0);
             },
 
             () -> false,
@@ -172,5 +180,33 @@ public class Intake extends SubsystemBase {
                 () -> false,
 
                 this);
+    }
+
+    public Command zeroCommand() {
+        return new FunctionalCommand(() -> {}, () -> {
+            moveMotor.set(-0.1);
+        }, interrupted -> {
+            moveMotor.set(0);
+        }, () -> false, this);
+    }
+    public Command zeroCommand2() {
+        return new FunctionalCommand(() -> {}, () -> {
+            moveMotor.set(0.1);
+        }, interrupted -> {
+            moveMotor.set(0);
+        }, () -> false, this);
+    }
+    public Command zeroCommand3() {
+        return new FunctionalCommand(() -> {}, () -> {
+            collectMotor.set(-0.5);
+        }, interrupted -> {
+            collectMotor.set(0);
+        }, () -> false, this);
+    }
+    public Command zeroCommand4() {
+        return new FunctionalCommand(() -> {}, () -> {
+            System.out.println(encoder.getPosition());
+        }, interrupted -> {
+        }, () -> false, this);
     }
 }

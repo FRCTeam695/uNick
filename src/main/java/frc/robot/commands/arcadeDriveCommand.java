@@ -21,7 +21,7 @@ public class arcadeDriveCommand extends Command {
   public void execute() {
     double forwardSpeed = RobotContainer.controller.getRawAxis(Constants.driveConstants.leftAxis);
     double turningSpeed = RobotContainer.controller.getRawAxis(Constants.driveConstants.rightAxis);
-    driveTrain.arcadeDrive(forwardSpeed * 0.8, turningSpeed * 0.8);
+    driveTrain.arcadeDrive(forwardSpeed * 0.4, turningSpeed * 0.4);
   }
 
 

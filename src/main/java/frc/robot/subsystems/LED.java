@@ -114,6 +114,19 @@ public class LED extends SubsystemBase {
         realLED.setData(realLEDBuffer);
     }
 
+    public void setTurqoise(double turqoiseBrightness) {
+        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for green
+
+            realLEDBuffer.setRGB(i, (int) ((72) * (double) (Math.abs(turqoiseBrightness))),
+                    (int) ((209) * (double) (Math.abs(turqoiseBrightness))),
+                    (int) ((204) * (double) (Math.abs(turqoiseBrightness))));
+
+        }
+
+        realLED.setData(realLEDBuffer);
+    }
+
     public void setLEDOff() {
         for (int i = 0; i < realLEDBuffer.getLength(); i++) {
 
@@ -450,6 +463,10 @@ public class LED extends SubsystemBase {
 
                     if (colorNumber == 6) {
                         setWhite(1);
+                    }
+
+                    if (colorNumber == 7) {
+                        setTurqoise(1);
                     }
 
                 },

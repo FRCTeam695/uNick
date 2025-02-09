@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
         moveMotor.configure(moveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         collectConfig
-                .smartCurrentLimit(5)
+                .smartCurrentLimit(10)
                 .idleMode(IdleMode.kBrake);
 
         collectMotor.configure(collectConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -72,7 +72,7 @@ public class Intake extends SubsystemBase {
 
             () -> {
                 
-                pidControl.setReference(ref.getAsDouble(), ControlType.kPosition);
+                pidControl.setReference(-1.0 * ref.getAsDouble(), ControlType.kPosition);
                 collectMotor.set(-0.5);
                 
                 // if (encoder.getPosition() < ref.getAsDouble()) {

@@ -121,9 +121,8 @@ public class RobotContainer {
     //   intake.collectMotorCommand(lBumper, rBumper)
     // ));
 
-    //driveTrain.setDefaultCommand(arcadeDriveCommand);
-
-    bButton.whileTrue(intake.setIntakeHeight(() -> 30));
-    //intake.setDefaultCommand(intake.collectMotorCommand(lBumper, rBumper));
+    driveTrain.setDefaultCommand(arcadeDriveCommand);
+    bButton.whileTrue(intake.setIntakeHeight(() -> 10));
+    intake.setDefaultCommand(intake.moveMotorCommand(leftTrigger, rightTrigger));
   }
 }

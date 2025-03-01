@@ -35,9 +35,9 @@ public class RobotContainer {
 
   //declaring controller buttons
 
-  private static final Trigger xButton = controller.x();
-  private static final Trigger aButton = controller.a();
-  private static final Trigger bButton = controller.b();
+  private static final Trigger bButton = controller.x();
+  private static final Trigger xButton = controller.a();
+  private static final Trigger aButton = controller.b();
   private static final Trigger yButton = controller.y();
 
   //declaring controller triggers
@@ -97,18 +97,18 @@ public class RobotContainer {
 
   //___________________________________________________________________________________________
 
-  private static final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
+  //private static final CanSparkFlex m_canSparkFlex = new CanSparkFlex();
   private static final LED LED = new LED();
-  private static final Servos m_Servo = new Servos();
-  private static final DriveTrain driveTrain = new DriveTrain();
+  //private static final Servos m_Servo = new Servos();
+  //private static final DriveTrain driveTrain = new DriveTrain();
   private static final LimitSwitches limitSwitch = new LimitSwitches();
   private static final NetworkTables networkTable = new NetworkTables();
-  private static final SwerveDrive swerve = new SwerveDrive();
-  private static final Intake intake = new Intake();
+  //private static final SwerveDrive swerve = new SwerveDrive();
+  //private static final Intake intake = new Intake();
 
-  private static final arcadeDriveCommand arcadeDriveCommand = new arcadeDriveCommand(driveTrain);
-  private static final tankDriveCommand tankDriveCommand = new tankDriveCommand(driveTrain);
-  private static final moveMotor motorMove = new moveMotor(m_canSparkFlex);
+  //private static final arcadeDriveCommand arcadeDriveCommand = new arcadeDriveCommand(driveTrain);
+  //private static final tankDriveCommand tankDriveCommand = new tankDriveCommand(driveTrain);
+  //private static final moveMotor motorMove = new moveMotor(m_canSparkFlex);
   //_________________________________________________________________________________________
 
   public RobotContainer() {
@@ -120,17 +120,9 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
-    // intake.setDefaultCommand(new ParallelCommandGroup(
-    //   intake.moveMotorCommand(leftTrigger, rightTrigger),
-    //   intake.collectMotorCommand(lBumper, rBumper)
-    // ));
-
-    driveTrain.setDefaultCommand(arcadeDriveCommand);
-    bButton.whileTrue(intake.setIntakeHeight(() -> 15));
-    aButton.whileTrue(intake.zeroCommand());
-    yButton.whileTrue(intake.zeroCommand2());
-    xButton.whileTrue(intake.zeroCommand3());
-    lBumper.onTrue(intake.zeroCommand4());
-    //intake.setDefaultCommand(intake.moveMotorCommand(leftTrigger, rightTrigger));
+    //xButton.whileTrue(LED.flash(2));
+    
+    bButton.whileTrue(LED.breatheYellow());
+    xButton.whileTrue(LED.rainbowLED());
   }
 }

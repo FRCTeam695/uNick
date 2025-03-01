@@ -1,10 +1,20 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,14 +24,13 @@ public class LED extends SubsystemBase {
     private long counter = 0;
 
     private AddressableLED realLED;
-
     private AddressableLEDBuffer realLEDBuffer;
 
     private double xaxis;
 
     public LED() {
 
-        realLED = new AddressableLED(1);
+        realLED = new AddressableLED(Constants.LEDConstants.ledConstant);
         realLEDBuffer = new AddressableLEDBuffer(5);
 
         realLED.setLength(realLEDBuffer.getLength());
@@ -30,100 +39,30 @@ public class LED extends SubsystemBase {
 
     }
 
-    public void setRed(double redBrightness) {
+    public void setYellow() {
+        LEDPattern red = LEDPattern.solid(Color.kYellow);
 
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
+        // Apply the LED pattern to the data buffer
+        red.applyTo(realLEDBuffer);
 
-            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(redBrightness))), 0, 0);
-
-        }
-
+        // Write the data to the LED strip
         realLED.setData(realLEDBuffer);
     }
 
-    public void setOrange(double orangeBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
+    public void breathingYellow() {
+        LEDPattern base = LEDPattern.solid(Color.kYellow);
+        LEDPattern pattern = base.breathe(Seconds.of(2));
 
-            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(orangeBrightness))),
-                    (int) ((100) * (double) (Math.abs(orangeBrightness))), 0);
-
-        }
-
+        pattern.applyTo(realLEDBuffer);
         realLED.setData(realLEDBuffer);
     }
 
-    public void setYellow(double yellowBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
+    public void rainbow() {
+        LEDPattern rainbow = LEDPattern.rainbow(255, 255);
+        Distance kLedSpacing = Meters.of(1 / 58.8);
+        LEDPattern scrollingRainbow = rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.1), kLedSpacing);
 
-            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(yellowBrightness))),
-                    (int) ((255) * (double) (Math.abs(yellowBrightness))), 0);
-
-        }
-
-        realLED.setData(realLEDBuffer);
-    }
-
-    public void setGreen(double greenBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
-
-            realLEDBuffer.setRGB(i, 0, (int) ((255) * (double) (Math.abs(greenBrightness))), 0);
-
-        }
-
-        realLED.setData(realLEDBuffer);
-    }
-
-    public void setBlue(double blueBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
-
-            realLEDBuffer.setRGB(i, 0, 0, (int) ((255) * (double) (Math.abs(blueBrightness))));
-
-        }
-
-        realLED.setData(realLEDBuffer);
-    }
-
-    public void setPurple(double purpleBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
-
-            realLEDBuffer.setRGB(i, (int) ((160) * (double) (Math.abs(purpleBrightness))),
-                    (int) ((32) * (double) (Math.abs(purpleBrightness))),
-                    (int) ((240) * (double) (Math.abs(purpleBrightness))));
-
-        }
-
-        realLED.setData(realLEDBuffer);
-    }
-
-    public void setWhite(double whiteBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
-
-            realLEDBuffer.setRGB(i, (int) ((255) * (double) (Math.abs(whiteBrightness))),
-                    (int) ((255) * (double) (Math.abs(whiteBrightness))),
-                    (int) ((255) * (double) (Math.abs(whiteBrightness))));
-
-        }
-
-        realLED.setData(realLEDBuffer);
-    }
-
-    public void setTurqoise(double turqoiseBrightness) {
-        for (int i = 0; i < realLEDBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
-
-            realLEDBuffer.setRGB(i, (int) ((72) * (double) (Math.abs(turqoiseBrightness))),
-                    (int) ((209) * (double) (Math.abs(turqoiseBrightness))),
-                    (int) ((204) * (double) (Math.abs(turqoiseBrightness))));
-
-        }
-
+        scrollingRainbow.applyTo(realLEDBuffer);
         realLED.setData(realLEDBuffer);
     }
 
@@ -164,66 +103,14 @@ public class LED extends SubsystemBase {
 
                     if (controllerXDirectionBoolRight(this.xaxis)) {
 
-                        if (rightColor == 0) {
-                            setRed(this.xaxis);
-                        }
-        
-                        if (rightColor == 1) {
-                            setOrange(this.xaxis);
-                        }
-        
-                        if (rightColor == 2) {
-                            setYellow(this.xaxis);
-                        }
-        
-                        if (rightColor == 3) {
-                            setGreen(this.xaxis);
-                        }
-        
-                        if (rightColor == 4) {
-                            setBlue(this.xaxis);
-                        }
-        
-                        if (rightColor == 5) {
-                            setPurple(this.xaxis);
-                        }
-        
-                        if (rightColor == 6) {
-                            setWhite(this.xaxis);
-                        }
-        
+                        setColor(leftColor);
+
                     }
-        
+
                     if (controllerXDirectionBoolLeft(this.xaxis)) {
-        
-                        if (leftColor == 0) {
-                            setRed(this.xaxis);
-                        }
-        
-                        if (leftColor == 1) {
-                            setOrange(this.xaxis);
-                        }
-        
-                        if (leftColor == 2) {
-                            setYellow(this.xaxis);
-                        }
-        
-                        if (leftColor == 3) {
-                            setGreen(this.xaxis);
-                        }
-        
-                        if (leftColor == 4) {
-                            setBlue(this.xaxis);
-                        }
-        
-                        if (leftColor == 5) {
-                            setPurple(this.xaxis);
-                        }
-        
-                        if (leftColor == 6) {
-                            setWhite(this.xaxis);
-                        }
-        
+
+                        setColor(rightColor);
+
                     }
 
                 },
@@ -428,7 +315,17 @@ public class LED extends SubsystemBase {
 
     // ------------------------------------------------------------------------------------
 
-    public Command setColor(int colorNumber) {
+    public void setColor(int colorNumber) {
+
+        if (colorNumber == 0) {
+            setYellow();
+        }
+        if (colorNumber == 1) {
+            rainbow();
+        }
+    }
+
+    public Command breatheYellow() {
         return new FunctionalCommand(
 
                 () -> {
@@ -436,39 +333,7 @@ public class LED extends SubsystemBase {
                 },
 
                 () -> {
-
-                    if (colorNumber == 0) {
-                        setRed(1);
-                    }
-
-                    if (colorNumber == 1) {
-                        setOrange(1);
-                    }
-
-                    if (colorNumber == 2) {
-                        setYellow(1);
-                    }
-
-                    if (colorNumber == 3) {
-                        setGreen(1);
-                    }
-
-                    if (colorNumber == 4) {
-                        setBlue(1);
-                    }
-
-                    if (colorNumber == 5) {
-                        setPurple(1);
-                    }
-
-                    if (colorNumber == 6) {
-                        setWhite(1);
-                    }
-
-                    if (colorNumber == 7) {
-                        setTurqoise(1);
-                    }
-
+                    breathingYellow();
                 },
 
                 interrupted -> {
@@ -478,5 +343,22 @@ public class LED extends SubsystemBase {
                 () -> false,
 
                 this);
+    }
+
+    public Command rainbowLED() {
+        return new FunctionalCommand(
+            () -> {}, 
+            
+            () -> {
+                rainbow();
+            }, 
+        
+            interrupted -> {
+                setLEDOff();
+            }, 
+            
+            () -> false, 
+        
+        this);
     }
 }

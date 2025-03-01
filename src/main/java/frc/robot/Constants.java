@@ -14,6 +14,10 @@ public final class Constants {
     public static final String kFFKey = "kFF";
   }
 
+  public static final class LEDConstants {
+    public static final int ledConstant = 1;
+  }
+
   public static final class CANID {
     public static final int testMotor = 51;
 

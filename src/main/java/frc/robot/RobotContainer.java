@@ -20,8 +20,6 @@ import frc.robot.subsystems.SwerveDrive;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -121,8 +119,34 @@ public class RobotContainer {
   
   private void configureBindings() {
     //xButton.whileTrue(LED.flash(2));
-    
-    bButton.whileTrue(LED.breatheYellow());
-    xButton.whileTrue(LED.rainbowLED());
+    /*
+     * 0 - 8 (anything is just black)
+     * 0 - Red
+     * 1 - Orange
+     * 2 - Yellow
+     * 3 - Green
+     * 4 - Blue
+     * 5 - Purple
+     * 6 - Grey
+     * 7 - Black
+     * 8 - White
+     */
+    yButton.whileTrue(LED.solidColor(7).ignoringDisable(true));
+    aButton.whileTrue(LED.solidColor(8).ignoringDisable(true));
+    /*
+     * 0-8 (anything else is also just black)
+     * 0 - Red
+     * 1 - Orange
+     * 2 - Yellow
+     * 3 - Green 
+     * 4 - Blue
+     * 5 - Purple
+     * 6 - Grey 
+     * 7 - Black
+     * 8 - White
+     */
+    bButton.whileTrue(LED.breatheEffect(5).ignoringDisable(true));
+    xButton.whileTrue(LED.breatheEffect(6).ignoringDisable(true));
+    rBumper.whileTrue(LED.rainbowLED().ignoringDisable(true));
   }
 }

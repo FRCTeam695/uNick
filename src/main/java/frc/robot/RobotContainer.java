@@ -118,7 +118,6 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
-    //xButton.whileTrue(LED.flash(2));
     /*
      * 0 - 8 (anything is just black)
      * 0 - Red
@@ -128,10 +127,10 @@ public class RobotContainer {
      * 4 - Blue
      * 5 - Purple
      * 6 - Grey
-     * 7 - Black
+     * 7 - Black (off)
      * 8 - White
      */
-    yButton.whileTrue(LED.solidColor(7).ignoringDisable(true));
+    yButton.whileTrue(LED.solidColor(4).ignoringDisable(true));
     aButton.whileTrue(LED.solidColor(8).ignoringDisable(true));
     /*
      * 0-8 (anything else is also just black)
@@ -142,11 +141,13 @@ public class RobotContainer {
      * 4 - Blue
      * 5 - Purple
      * 6 - Grey 
-     * 7 - Black
+     * 7 - Black (off)
      * 8 - White
      */
     bButton.whileTrue(LED.breatheEffect(5).ignoringDisable(true));
     xButton.whileTrue(LED.breatheEffect(6).ignoringDisable(true));
     rBumper.whileTrue(LED.rainbowLED().ignoringDisable(true));
+
+    //driveTrain.setDefaultCommand(arcadeDriveCommand);
   }
 }

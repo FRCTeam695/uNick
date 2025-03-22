@@ -3,10 +3,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static edu.wpi.first.units.Units.Meters;
@@ -16,25 +23,40 @@ import static edu.wpi.first.units.Units.Seconds;
 import java.util.function.DoubleSupplier;
 
 public class LED extends SubsystemBase {
-    double xaxis;
-    int counter;
-    int[] LEDShift;
-    private AddressableLED realLED;
-    private AddressableLEDBuffer realLEDBuffer;
+
+    private static NetworkTables networkTable;
     
-    public LED() {
+        double xaxis;
+        int counter;
+        int[] LEDShift;
+        private AddressableLED realLED;
+        private AddressableLEDBuffer realLEDBuffer;
+    
+        StringPublisher ledStatus;
+        
+        public LED() {
+    
+            counter = 0;
+            LEDShift = new int[] { 0, 1, 1, 1, 0 };
+    
+            realLED = new AddressableLED(1);
+            realLEDBuffer = new AddressableLEDBuffer(5);
+    
+            realLED.setLength(realLEDBuffer.getLength());
+            realLED.setData(realLEDBuffer);
+            realLED.start();
+    
+            networkTable = new NetworkTables();
 
-        counter = 0;
-        LEDShift = new int[] { 0, 1, 1, 1, 0 };
+            ledStatus = networkTable.getStringPublisher("LED_Status");
+            
 
-        realLED = new AddressableLED(1);
-        realLEDBuffer = new AddressableLEDBuffer(5);
+            DataLogManager.start();
+            DriverStation.startDataLog(DataLogManager.getLog());
 
-        realLED.setLength(realLEDBuffer.getLength());
-        realLED.setData(realLEDBuffer);
-        realLED.start();
-
-    }
+            ledStatus.set("off");
+            SmartDashboard.putNumber("pi", 3.14);
+        }
     //___________________________________________________________________________________________
     //Rainbow Pattern
     public void rainbow() {
@@ -52,6 +74,7 @@ public class LED extends SubsystemBase {
 
         scrollingRainbow.applyTo(realLEDBuffer);
         realLED.setData(realLEDBuffer);
+        ledStatus.set("rainbow");
     }
     //Turns LED Off
     public void setLEDOff() {
@@ -68,24 +91,34 @@ public class LED extends SubsystemBase {
     public LEDPattern colorBase(int colorNumber) {
         switch (colorNumber) {
             case 0:
+                ledStatus.set("red");
                 return LEDPattern.solid(Color.kRed);
             case 1:
+                ledStatus.set("orange");
                 return LEDPattern.solid(Color.kOrange);
             case 2:
+                ledStatus.set("yellow");
                 return LEDPattern.solid(Color.kYellow);
             case 3:
+                ledStatus.set("green");
                 return LEDPattern.solid(Color.kGreen);
             case 4:
+                ledStatus.set("blue");
                 return LEDPattern.solid(Color.kBlue);
             case 5:
+                ledStatus.set("purple");
                 return LEDPattern.solid(Color.kPurple);
             case 6:
+                ledStatus.set("grey");
                 return LEDPattern.solid(Color.kGray);
             case 7:
+                ledStatus.set("off");
                 return LEDPattern.solid(Color.kBlack);
             case 8:
+                ledStatus.set("white");
                 return LEDPattern.solid(Color.kWhite);
             default:
+                ledStatus.set("off");
                 return LEDPattern.solid(Color.kBlack);
         }
     }
@@ -119,6 +152,7 @@ public class LED extends SubsystemBase {
             
             interrupted -> {
                 setLEDOff();
+                ledStatus.set("off");
             }, 
             
             () -> false, 
@@ -139,6 +173,7 @@ public class LED extends SubsystemBase {
 
                 interrupted -> {
                     setLEDOff();
+                    ledStatus.set("off");
                 },
 
                 () -> false,
@@ -155,6 +190,7 @@ public class LED extends SubsystemBase {
         
             interrupted -> {
                 setLEDOff();
+                ledStatus.set("off");
             }, 
             
             () -> false, 

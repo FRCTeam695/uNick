@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.wpilog.WPILOGWriter.AdvantageScopeOpenBehavior;
+
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,17 +26,24 @@ public class NetworkTables extends SubsystemBase {
     private NetworkTable table = inst.getTable("frc695_test_table");
 
     private DoublePublisher xPub = table.getDoubleTopic("x").publish();
-
     private DoublePublisher yPub = table.getDoubleTopic("y").publish();
 
     
 
     public NetworkTables() {
+
+        
+
         xPub.set(0);
         yPub.set(0);
+    }
 
-        SmartDashboard.putNumber("x", x);
-        SmartDashboard.putNumber("y", y);
+    public NetworkTable getTable(String key) {
+        return inst.getTable(key);
+    }
+    
+    public StringPublisher getStringPublisher(String key) {
+        return getTable(key).getStringTopic(key).publish();
     }
 
     @Override
@@ -54,9 +64,7 @@ public class NetworkTables extends SubsystemBase {
             yInc = yInc * -1;
         }
         xPub.set(x);
-        yPub.set(y);
-        SmartDashboard.putNumber("x", x);
-        SmartDashboard.putNumber("y", y);
+        yPub.set(y); 
     }
 
 }
